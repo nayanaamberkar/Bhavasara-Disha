@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor's Message - Bhavasara Vision India</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c2461, #1e3799, #4a69bd);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-image {
+            max-width: 300px;
+            height: auto;
+            object-fit: contain;
+            border: none;
+            background: transparent;
+        }
+
+        .org-text {
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .org-text h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #0c2461;
+        }
+
+        .org-text p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 600;
+            color: #1e3799;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: #3498db;
+        }
+
+        /* Admin Controls */
+        .admin-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .admin-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .admin-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: #3498db;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #219a52;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Editor Content Section */
+        .editor-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .editor-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .editor-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .editor-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .editor-content {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        .editor-info {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            color: #333;
+            position: relative;
+        }
+
+        .edit-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .editor-info.editable:hover .edit-overlay {
+            opacity: 1;
+        }
+
+        .edit-icon {
+            background: #3498db;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .edit-icon:hover {
+            transform: scale(1.1);
+            background: #2980b9;
+        }
+
+        .editor-name {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: #0c2461;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .editor-name .first-name {
+            font-weight: 300;
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .editor-name .last-name {
+            font-weight: 700;
+            display: block;
+            font-size: 2.5rem;
+        }
+
+        .editor-title {
+            font-size: 1.3rem;
+            color: #1e3799;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .editor-message {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 30px;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #0c2461, transparent);
+            margin: 30px 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #0c2461;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .about-content {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #444;
+        }
+
+        /* Editable Fields */
+        .editable-field {
+            border: 2px dashed transparent;
+            padding: 5px;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+            min-height: 1.5em;
+        }
+
+        .editable-field.editing {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .editable-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #444;
+            background: rgba(52, 152, 219, 0.05);
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .editable-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #3498db;
+            border-radius: 5px;
+            font-size: inherit;
+            color: inherit;
+            background: rgba(52, 152, 219, 0.05);
+            font-family: inherit;
+            font-weight: inherit;
+        }
+
+        .editor-image-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .editor-image {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            object-fit: cover;
+        }
+
+        .image-upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .editor-image-container.editable:hover .image-upload-overlay {
+            opacity: 1;
+        }
+
+        .image-upload-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload-btn:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .editor-image-placeholder {
+            width: 100%;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .editor-image-placeholder i {
+            font-size: 4rem;
+        }
+
+        /* Login Section */
+        .login-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 1px solid #27ae60;
+        }
+
+        .status-error {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .status-info {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid #3498db;
+        }
+
+        /* Footer Styles */
+        .main-footer {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px 0;
+            margin-top: 50px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-logo .logo-image {
+            max-width: 100px;
+            height: auto;
+            object-fit: contain;
+            border: none;
+            background: transparent;
+        }
+
+        .footer-text {
+            color: #2c3e50;
+        }
+
+        .footer-text h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: #0c2461;
+        }
+
+        .footer-text p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 600;
+            color: #1e3799;
+        }
+
+        .footer-copyright {
+            color: #7f8c8d;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .footer-copyright p {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .footer-powered {
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            text-align: right;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .editor-content {
+                gap: 30px;
+            }
+            
+            .editor-info {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .editor-content {
+                flex-direction: column;
+            }
+
+            .editor-image-container {
+                order: -1;
+            }
+            
+            .editor-image, .editor-image-placeholder {
+                max-height: 400px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .editor-section {
+                padding: 20px;
+            }
+
+            .editor-info {
+                padding: 20px;
+            }
+
+            .editor-name {
+                font-size: 1.8rem;
+            }
+            
+            .editor-name .first-name {
+                font-size: 1.5rem;
+            }
+            
+            .editor-name .last-name {
+                font-size: 2rem;
+            }
+
+            .editor-message {
+                font-size: 1rem;
+            }
+
+            .editor-title {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="logo.png" alt="Bhavasara Disha Logo" class="logo-image">
+                <div class="org-text">
+                    <h1>BHAVASAR <span style="color: #e74c3c;">VISION INDIA</span></h1>
+                    <p style="color: #000000;">DAVANGERE CLUB 102</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="navigation">
+            <button class="nav-btn" onclick="goToHome()">
+                <i class="fas fa-home"></i> Back to Home
+            </button>
+            <button class="nav-btn" id="editor-login-btn">
+                <i class="fas fa-edit"></i> Editor Login
+            </button>
+        </div>
+
+        <!-- Admin Controls (Visible when logged in) -->
+        <div class="admin-controls" id="admin-controls" style="display: none;">
+            <button class="admin-btn btn-primary" id="edit-toggle-btn">
+                <i class="fas fa-edit"></i> Toggle Edit Mode
+            </button>
+            <button class="admin-btn btn-success" id="save-changes-btn">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+            <button class="admin-btn logout-btn" id="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+
+        <!-- Status Message -->
+        <div id="status-message" class="status-message" style="display: none;"></div>
+
+        <!-- Login Section (Visible when not logged in) -->
+        <section id="login-section" class="login-section" style="display: none;">
+            <h2 style="text-align: center; margin-bottom: 20px;">Editor Login</h2>
+            <p style="text-align: center; margin-bottom: 20px; opacity: 0.9;">Please login to edit the editor's page</p>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password">
+                </div>
+                <button class="admin-btn btn-primary" id="login-btn" style="justify-content: center;">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </div>
+        </section>
+
+        <!-- Editor Section -->
+        <section id="editor-section" class="editor-section">
+            <div class="editor-header">
+                <h2>Editor's Message</h2>
+                <p>Words from our dedicated editor</p>
+            </div>
+            
+            <div class="editor-content">
+                <div class="editor-info" id="editor-info">
+                    <div class="edit-overlay">
+                        <div class="edit-icon" onclick="enableEditing()">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                    </div>
+                    
+                    <h1 class="editor-name">
+                        <span class="first-name editable-field" data-field="first_name">Loading...</span>
+                        <span class="last-name editable-field" data-field="last_name">Loading...</span>
+                    </h1>
+                    
+                    <p class="editor-title editable-field" data-field="title">Loading...</p>
+                    
+                    <div class="editor-message">
+                        <div class="editable-field" data-field="message">
+                            Loading editor's message...
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <h3 class="section-title">ABOUT ME</h3>
+                    
+                    <div class="about-content">
+                        <div class="editable-field" data-field="about">
+                            Loading about section...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="editor-image-container" id="editor-image-container">
+                    <!-- Editor's image will be loaded here -->
+                    <img src="editor.png" alt="Editor" class="editor-image" id="editor-image" style="display: none;">
+                    <div class="editor-image-placeholder" id="editor-image-placeholder">
+                        <i class="fas fa-user-circle"></i>
+                        <p>Editor's Image</p>
+                    </div>
+                    <div class="image-upload-overlay">
+                        <button class="image-upload-btn" onclick="document.getElementById('image-upload').click()">
+                            <i class="fas fa-camera"></i> Change Image
+                        </button>
+                        <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logo.png" alt="Bhavasara Disha Logo" class="logo-image">
+                <div class="footer-text">
+                    <h3>BHAVASAR <span style="color: #e74c3c;">VISION INDIA</span></h3>
+                    <p style="color: #000000;">DAVANGERE CLUB 102</p>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>Digital Magazine Library &copy; 2025</p>
+                <p>All rights reserved</p>
+            </div>
+            <div class="footer-powered">
+                <p>Designed by Naman Amberkar</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://rpfyqianbgxdqglcqoqz.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZnlxaWFuYmd4ZHFnbGNxb3F6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MzAxMjEsImV4cCI6MjA4MDAwNjEyMX0.aRsTpje9YXNrj8HpvUCnRSsfSazpboyJli49424dmV0';
+        
+        // Initialize Supabase
+        let supabase;
+        let isAdminLoggedIn = false;
+        let isEditMode = false;
+        let editorData = {};
+        
+        try {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log("Supabase connected successfully");
+        } catch (error) {
+            console.error("Supabase initialization error:", error);
+            showStatus("Failed to connect to database", "error");
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in
+            checkLoginStatus();
+            
+            // Load editor data
+            loadEditorData();
+            
+            // Load local editor image
+            loadLocalEditorImage();
+            
+            // Event listeners
+            document.getElementById('login-btn').addEventListener('click', login);
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            document.getElementById('edit-toggle-btn').addEventListener('click', toggleEditMode);
+            document.getElementById('save-changes-btn').addEventListener('click', saveChanges);
+            document.getElementById('image-upload').addEventListener('change', handleImageUpload);
+            document.getElementById('editor-login-btn').addEventListener('click', showLoginSection);
+            
+            // Enter key for login
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+        });
+
+        function checkLoginStatus() {
+            // Check if user is logged in
+            const savedLogin = localStorage.getItem('editorAdminLoggedIn');
+            if (savedLogin === 'true') {
+                isAdminLoggedIn = true;
+                updateUIForLogin();
+            } else {
+                // Show editor login button if not logged in
+                document.getElementById('editor-login-btn').style.display = 'flex';
+            }
+        }
+
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Simple authentication
+            if (username === 'nayana' && password === 'admin@123') {
+                isAdminLoggedIn = true;
+                localStorage.setItem('editorAdminLoggedIn', 'true');
+                updateUIForLogin();
+                showStatus("Login successful!", "success");
+                
+                // Clear login form
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            } else {
+                showStatus("Invalid username or password", "error");
+            }
+        }
+
+        function logout() {
+            isAdminLoggedIn = false;
+            isEditMode = false;
+            localStorage.removeItem('editorAdminLoggedIn');
+            updateUIForLogin();
+            showStatus("Logged out successfully", "info");
+        }
+
+        function showLoginSection() {
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('editor-login-btn').style.display = 'none';
+        }
+
+        function updateUIForLogin() {
+            if (isAdminLoggedIn) {
+                // Show admin controls
+                document.getElementById('admin-controls').style.display = 'flex';
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('editor-login-btn').style.display = 'none';
+                
+                // Make elements editable
+                document.getElementById('editor-info').classList.add('editable');
+                document.getElementById('editor-image-container').classList.add('editable');
+            } else {
+                // Hide admin controls, show editor login button
+                document.getElementById('admin-controls').style.display = 'none';
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('editor-login-btn').style.display = 'flex';
+                
+                // Make elements non-editable
+                document.getElementById('editor-info').classList.remove('editable');
+                document.getElementById('editor-image-container').classList.remove('editable');
+                
+                // Exit edit mode if active
+                if (isEditMode) {
+                    disableEditing();
+                }
+            }
+            
+            // Always show editor section (readable by everyone)
+            document.getElementById('editor-section').style.display = 'block';
+        }
+
+        function loadLocalEditorImage() {
+            const editorImage = document.getElementById('editor-image');
+            const placeholder = document.getElementById('editor-image-placeholder');
+            
+            // Try to load the local editor.png
+            editorImage.onload = function() {
+                // Image loaded successfully
+                editorImage.style.display = 'block';
+                placeholder.style.display = 'none';
+            };
+            
+            editorImage.onerror = function() {
+                // Image failed to load, show placeholder
+                editorImage.style.display = 'none';
+                placeholder.style.display = 'flex';
+            };
+            
+            // Trigger the load check
+            editorImage.src = 'editor.png';
+        }
+
+        async function loadEditorData() {
+            if (!supabase) {
+                showStatus("Database connection failed", "error");
+                return;
+            }
+            
+            try {
+                console.log("Loading editor data from Supabase...");
+                const { data, error } = await supabase
+                    .from('editor_page')
+                    .select('*')
+                    .single();
+                
+                if (error) {
+                    console.error("Supabase error:", error);
+                    if (error.code === 'PGRST116') {
+                        // No data found, show empty state
+                        console.log("No data found in Supabase");
+                        showEmptyState();
+                        return;
+                    }
+                    throw error;
+                }
+                
+                console.log("Editor data loaded:", data);
+                editorData = data;
+                populateEditorData();
+                
+            } catch (error) {
+                console.error('Error loading editor data:', error);
+                showStatus("Error loading editor data: " + error.message, "error");
+                showEmptyState();
+            }
+        }
+
+        function showEmptyState() {
+            // Show empty state when no data is found
+            document.querySelector('[data-field="first_name"]').textContent = "No data found";
+            document.querySelector('[data-field="last_name"]').textContent = "Please add editor information";
+            document.querySelector('[data-field="title"]').textContent = "Editor information not available";
+            document.querySelector('[data-field="message"]').textContent = "Editor information will appear here once added by an administrator.";
+            document.querySelector('[data-field="about"]').textContent = "Please login as editor to add information about the editor.";
+        }
+
+        function populateEditorData() {
+            console.log("Populating editor data:", editorData);
+            
+            // Populate text fields - only if data exists
+            if (editorData.first_name) {
+                document.querySelector('[data-field="first_name"]').textContent = editorData.first_name;
+            }
+            if (editorData.last_name) {
+                document.querySelector('[data-field="last_name"]').textContent = editorData.last_name;
+            }
+            if (editorData.title) {
+                document.querySelector('[data-field="title"]').textContent = editorData.title;
+            }
+            if (editorData.message) {
+                document.querySelector('[data-field="message"]').textContent = editorData.message;
+            }
+            if (editorData.about) {
+                document.querySelector('[data-field="about"]').textContent = editorData.about;
+            }
+            
+            // Load image from Supabase if available
+            if (editorData.image_url) {
+                console.log("Loading image from Supabase:", editorData.image_url);
+                const editorImage = document.getElementById('editor-image');
+                const placeholder = document.getElementById('editor-image-placeholder');
+                
+                editorImage.onload = function() {
+                    console.log("Supabase image loaded successfully");
+                    editorImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                
+                editorImage.onerror = function() {
+                    console.log("Supabase image failed to load");
+                    editorImage.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                };
+                
+                editorImage.src = editorData.image_url;
+            }
+        }
+
+        function toggleEditMode() {
+            if (isEditMode) {
+                disableEditing();
+            } else {
+                enableEditing();
+            }
+        }
+
+        function enableEditing() {
+            if (!isAdminLoggedIn) return;
+            
+            isEditMode = true;
+            document.getElementById('edit-toggle-btn').innerHTML = '<i class="fas fa-times"></i> Cancel Editing';
+            document.getElementById('edit-toggle-btn').style.background = '#e74c3c';
+            
+            // Make all editable fields clickable
+            const editableFields = document.querySelectorAll('.editable-field');
+            editableFields.forEach(field => {
+                field.style.cursor = 'pointer';
+                field.addEventListener('click', handleFieldClick);
+            });
+        }
+
+        function disableEditing() {
+            isEditMode = false;
+            document.getElementById('edit-toggle-btn').innerHTML = '<i class="fas fa-edit"></i> Toggle Edit Mode';
+            document.getElementById('edit-toggle-btn').style.background = '';
+            
+            // Remove click handlers and styling
+            const editableFields = document.querySelectorAll('.editable-field');
+            editableFields.forEach(field => {
+                field.style.cursor = 'default';
+                field.classList.remove('editing');
+                field.removeEventListener('click', handleFieldClick);
+                
+                // Remove any active textareas/inputs
+                if (field.querySelector('textarea, input')) {
+                    const originalText = field.querySelector('textarea, input').value;
+                    field.innerHTML = originalText;
+                }
+            });
+        }
+
+        function handleFieldClick(event) {
+            if (!isEditMode) return;
+            
+            const field = event.currentTarget;
+            const fieldName = field.getAttribute('data-field');
+            const originalText = field.textContent;
+            
+            // Create appropriate input based on field type
+            let inputElement;
+            if (fieldName === 'about' || fieldName === 'message') {
+                inputElement = document.createElement('textarea');
+                inputElement.className = 'editable-textarea';
+                inputElement.value = originalText;
+            } else {
+                inputElement = document.createElement('input');
+                inputElement.className = 'editable-input';
+                inputElement.type = 'text';
+                inputElement.value = originalText;
+                
+                // Set appropriate font size/weight based on field
+                if (fieldName === 'first_name') {
+                    inputElement.style.fontSize = '1.8rem';
+                    inputElement.style.fontWeight = '300';
+                } else if (fieldName === 'last_name') {
+                    inputElement.style.fontSize = '2.5rem';
+                    inputElement.style.fontWeight = '700';
+                }
+            }
+            
+            // Replace field content with input
+            field.innerHTML = '';
+            field.appendChild(inputElement);
+            field.classList.add('editing');
+            
+            // Focus the input
+            inputElement.focus();
+            
+            // Save on blur or Enter key
+            inputElement.addEventListener('blur', function() {
+                saveField(field, fieldName, inputElement.value);
+            });
+            
+            inputElement.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && fieldName !== 'about' && fieldName !== 'message') {
+                    e.preventDefault();
+                    saveField(field, fieldName, inputElement.value);
+                }
+            });
+        }
+
+        function saveField(field, fieldName, newValue) {
+            field.classList.remove('editing');
+            field.textContent = newValue;
+            
+            // Update editorData
+            editorData[fieldName] = newValue;
+            console.log(`Field ${fieldName} updated to:`, newValue);
+        }
+
+        async function saveChanges() {
+            if (!isAdminLoggedIn) return;
+            
+            try {
+                console.log("Saving changes to Supabase:", editorData);
+                
+                // Create update data object
+                const updateData = {
+                    first_name: editorData.first_name || '',
+                    last_name: editorData.last_name || '',
+                    title: editorData.title || '',
+                    message: editorData.message || '',
+                    about: editorData.about || '',
+                    image_url: editorData.image_url || null,
+                    updated_at: new Date().toISOString()
+                };
+                
+                console.log("Update data:", updateData);
+                
+                let result;
+                if (editorData.id) {
+                    // Update existing record
+                    console.log("Updating existing record with ID:", editorData.id);
+                    result = await supabase
+                        .from('editor_page')
+                        .update(updateData)
+                        .eq('id', editorData.id)
+                        .select();
+                } else {
+                    // Create new record
+                    console.log("Creating new record");
+                    result = await supabase
+                        .from('editor_page')
+                        .insert([updateData])
+                        .select();
+                }
+                
+                const { data, error } = result;
+                
+                if (error) {
+                    console.error("Supabase update error:", error);
+                    throw error;
+                }
+                
+                console.log("Update successful:", data);
+                
+                if (data && data.length > 0) {
+                    // Update the local editorData with the returned data
+                    editorData = data[0];
+                    console.log("Updated editorData:", editorData);
+                    
+                    // Update the UI immediately with the new data
+                    populateEditorData();
+                    
+                    showStatus("Changes saved successfully!", "success");
+                    disableEditing();
+                } else {
+                    // If no data returned but no error, assume success and reload
+                    console.log("No data returned, reloading from Supabase...");
+                    await loadEditorData();
+                    showStatus("Changes saved successfully!", "success");
+                    disableEditing();
+                }
+                
+            } catch (error) {
+                console.error('Error saving editor data:', error);
+                showStatus("Error saving changes: " + error.message, "error");
+            }
+        }
+
+        async function handleImageUpload(event) {
+            if (!isAdminLoggedIn) return;
+            
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showStatus("Please select an image file", "error");
+                return;
+            }
+            
+            // File size limit (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                showStatus("Image size must be less than 5MB", "error");
+                return;
+            }
+            
+            try {
+                showStatus("Uploading image...", "info");
+                
+                // Upload to Supabase Storage
+                const fileExt = file.name.split('.').pop();
+                const fileName = `editor_${Date.now()}.${fileExt}`;
+                
+                console.log("Uploading image to Supabase storage...");
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('editor-images')
+                    .upload(fileName, file);
+                
+                if (uploadError) {
+                    console.error("Image upload error:", uploadError);
+                    throw uploadError;
+                }
+                
+                // Get public URL
+                const { data: urlData } = supabase.storage
+                    .from('editor-images')
+                    .getPublicUrl(fileName);
+                
+                console.log("Image uploaded, public URL:", urlData.publicUrl);
+                
+                // Update editor data with new image URL
+                editorData.image_url = urlData.publicUrl;
+                
+                // Update the image display
+                const editorImage = document.getElementById('editor-image');
+                const placeholder = document.getElementById('editor-image-placeholder');
+                
+                editorImage.onload = function() {
+                    console.log("New image loaded successfully");
+                    editorImage.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                
+                editorImage.onerror = function() {
+                    console.log("New image failed to load");
+                    editorImage.style.display = 'none';
+                    placeholder.style.display = 'flex';
+                };
+                
+                editorImage.src = urlData.publicUrl;
+                
+                // Save the updated editor data
+                await saveChanges();
+                
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                showStatus("Error uploading image: " + error.message, "error");
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type}`;
+            statusEl.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                statusEl.style.display = 'none';
+            }, 5000);
+        }
+
+        function goToHome() {
+            window.location.href = 'magzine.html';
+        }
+    </script>
+</body>
+</html>
